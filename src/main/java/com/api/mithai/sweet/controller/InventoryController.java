@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class InventoryController {
     private final ResponseHandler responseHandler;
 
     @PostMapping("/{id}" + Urls.PURCHASE_URL)
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BaseResponse> purchase(
             @PathVariable Long id,
             @RequestBody @Valid PurchaseDto purchaseDto) {
@@ -31,6 +33,7 @@ public class InventoryController {
     }
 
     @PostMapping("/{id}" + Urls.RESTOCK_URL)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse> restock(
             @PathVariable Long id,
             @RequestBody @Valid RestockDto restockDto) {

@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -26,41 +27,28 @@ public class SweetController {
     private final ResponseHandler responseHandler;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse> create(@RequestBody @Valid SweetRequestDto sweetRequestDto) {
         SweetResponseDto sweetResponseDto = sweetService.create(sweetRequestDto);
         return responseHandler.okResponse(sweetResponseDto, HttpStatus.CREATED, Constants.SWEET_CREATED_SUCCESSFULLY);
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<BaseResponse> listAll(@RequestParam Map<String, Object> params) {
         PaginatedBaseResponse<SweetResponseDto> paginatedResponse = sweetService.listAll(params);
         return responseHandler.okResponse(paginatedResponse, HttpStatus.OK, Constants.SWEETS_RETRIEVED_SUCCESSFULLY);
     }
 
     @GetMapping(Urls.SEARCH_URL)
-    public ResponseEntity<BaseResponse> search(
-            @RequestParam(required = false) String searchValue,
-            @RequestParam(required = false) Double minValue,
-            @RequestParam(required = false) Double maxValue,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) String sortField,
-            @RequestParam(required = false) String sortOrder) {
-        
-        Map<String, Object> params = new HashMap<>();
-        if (searchValue != null) params.put("searchValue", searchValue);
-        if (minValue != null) params.put("minValue", minValue);
-        if (maxValue != null) params.put("maxValue", maxValue);
-        if (page != null) params.put("page", page);
-        if (size != null) params.put("size", size);
-        if (sortField != null) params.put("sortField", sortField);
-        if (sortOrder != null) params.put("sortOrder", sortOrder);
-        
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<BaseResponse> search(@RequestParam Map<String, Object> params) {
         PaginatedBaseResponse<SweetResponseDto> paginatedResponse = sweetService.listAll(params);
         return responseHandler.okResponse(paginatedResponse, HttpStatus.OK, Constants.SWEETS_RETRIEVED_SUCCESSFULLY);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid SweetRequestDto sweetRequestDto) {
@@ -69,6 +57,7 @@ public class SweetController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BaseResponse> delete(@PathVariable Long id) {
         sweetService.delete(id);
         return responseHandler.okResponse(HttpStatus.OK, Constants.SWEET_DELETED_SUCCESSFULLY);
