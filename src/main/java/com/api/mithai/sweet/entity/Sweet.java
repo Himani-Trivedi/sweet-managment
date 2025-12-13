@@ -1,10 +1,6 @@
 package com.api.mithai.sweet.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,23 +14,16 @@ public class Sweet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Sweet name cannot be null or empty")
-    @Pattern(regexp = "^\\S.*\\S$|^\\S+$", message = "Sweet name cannot be blank")
     @Column(nullable = false)
     private String name;
 
-    @NotNull(message = "Category ID cannot be null")
     @OneToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private SweetCategory category;
 
-    @NotNull(message = "Price cannot be null")
-    @Min(value = 1, message = "Price must be greater than zero")
     @Column(nullable = false)
     private Double price;
 
-    @NotNull(message = "Quantity cannot be null")
-    @Min(value = 0, message = "Quantity cannot be negative")
     @Column(nullable = false)
     private Integer quantity;
 
