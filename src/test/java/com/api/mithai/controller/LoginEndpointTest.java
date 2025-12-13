@@ -184,27 +184,23 @@ public class LoginEndpointTest {
         }
 
         @Test
-        @DisplayName("Should return 400 BAD REQUEST when email is blank (whitespace only)")
+        @DisplayName("Should return 400 BAD REQUEST when email is blank (whitespace only) - @NotBlank validation")
         void shouldReturn400BadRequestWhenEmailIsBlank() throws Exception {
             // Given
-            loginRequest.setEmail("   "); // Blank email - whitespace only
+            loginRequest.setEmail("   "); // Blank email - whitespace only - @NotBlank validation should catch this
             loginRequest.setPassword("SecureP@1");
             String requestBody = objectMapper.writeValueAsString(loginRequest);
-            String errorMessage = Constants.INVALID_EMAIL_OR_PASSWORD;
 
-            doThrow(new ResponseStatusException(errorMessage, HttpStatus.BAD_REQUEST))
-                    .when(authService).login(any(LoginRequestDto.class));
-
-            // When & Then
+            // When & Then - @NotBlank validation happens before service is called
             mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.LOGIN_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.status").value(false))
-                    .andExpect(jsonPath("$.message").value(errorMessage));
+                    .andExpect(jsonPath("$.message").exists());
 
-            // Verify service was called
-            verify(authService, times(1)).login(any(LoginRequestDto.class));
+            // Verify service was NEVER called because validation fails before reaching controller method
+            verify(authService, never()).login(any(LoginRequestDto.class));
             verify(responseHandler, never()).okResponse(any(), any(HttpStatus.class), anyString());
         }
     }

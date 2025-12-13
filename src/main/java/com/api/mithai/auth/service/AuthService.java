@@ -43,9 +43,9 @@ public class AuthService {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
-        return new LoginResponseDto(user.get().getEmailId()
-                , accessTokenManager.getAccessToken(user.get())
-                , user.get().getRoleName());
+        return new LoginResponseDto(user.get().getEmailId(),
+                accessTokenManager.getAccessToken(user.get()),
+                user.get().getRoleName());
     }
 
     public void register(RegisterAuthRequestDto registerAuthRequestDto) {
