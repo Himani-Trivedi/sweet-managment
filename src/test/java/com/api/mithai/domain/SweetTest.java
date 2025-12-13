@@ -1,5 +1,6 @@
 package com.api.mithai.domain;
 
+import com.api.mithai.sweet.entity.Sweet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;

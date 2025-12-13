@@ -1,9 +1,10 @@
 package com.api.mithai.domain;
 
+import com.api.mithai.auth.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
-
+import com.api.mithai.auth.enums.Role;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

@@ -3,6 +3,7 @@ package com.api.mithai.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import com.api.mithai.sweet.entity.SweetCategory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,7 +74,7 @@ class SweetCategoryTest {
 
         @Test
         @DisplayName("Should accept null ID for new entities")
-        void shouldThrowExceptionWhenNameIsBlank() {
+        void shouldThrowExceptionWhenIDisNUll() {
             // Given
             Long id = null;
             String name = "Milk Sweets";
