@@ -7,6 +7,7 @@ import com.api.mithai.auth.enums.Role;
 import com.api.mithai.auth.repository.UserRepository;
 import com.api.mithai.auth.service.AuthService;
 import com.api.mithai.base.exception.ResponseStatusException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.*;
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AuthService Login Tests")
-class AuthServiceTest {
+class AuthServiceLoginUserTest {
 
     @Mock
     private UserRepository userRepository;
@@ -38,6 +39,15 @@ class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
+    private LoginRequestDto loginRequest;
+
+    @BeforeEach
+    void setUp() {
+        loginRequest = new LoginRequestDto();
+        loginRequest.setEmail("user@example.com");
+        loginRequest.setPassword("SecureP@1");
+    }
+
     @Nested
     @DisplayName("Email Validation Tests")
     class EmailValidationTests {
@@ -46,9 +56,7 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when email is null")
         void shouldThrowExceptionWhenEmailIsNull() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail(null);
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -62,9 +70,7 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when email is empty")
         void shouldThrowExceptionWhenEmailIsEmpty() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("");
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -78,9 +84,7 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when email is blank")
         void shouldThrowExceptionWhenEmailIsBlank() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("   ");
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -94,9 +98,7 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when email format is invalid")
         void shouldThrowExceptionWhenEmailFormatIsInvalid() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("invalid-email");
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -118,9 +120,7 @@ class AuthServiceTest {
 
             for (String email : validEmails) {
                 // Given
-                LoginRequestDto loginRequest = new LoginRequestDto();
                 loginRequest.setEmail(email);
-                loginRequest.setPassword("SecureP@1");
 
                 // When & Then - Should pass email validation but may fail at user lookup
                 assertDoesNotThrow(() -> {
@@ -142,9 +142,7 @@ class AuthServiceTest {
         @DisplayName("Should accept email with special characters")
         void shouldAcceptEmailWithSpecialCharacters() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("user+tag@example.com");
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then - Should pass email validation
             assertDoesNotThrow(() -> {
@@ -167,8 +165,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password is null")
         void shouldThrowExceptionWhenPasswordIsNull() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword(null);
 
             // When & Then
@@ -183,8 +179,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password is empty")
         void shouldThrowExceptionWhenPasswordIsEmpty() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("");
 
             // When & Then
@@ -199,8 +193,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password is too short")
         void shouldThrowExceptionWhenPasswordIsTooShort() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("Short1@");
 
             // When & Then
@@ -215,8 +207,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password is too long")
         void shouldThrowExceptionWhenPasswordIsTooLong() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("VeryLongPassword123@");
 
             // When & Then
@@ -231,8 +221,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password lacks uppercase letter")
         void shouldThrowExceptionWhenPasswordLacksUppercase() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("securep@1");
 
             // When & Then
@@ -247,8 +235,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password lacks lowercase letter")
         void shouldThrowExceptionWhenPasswordLacksLowercase() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("SECUREP@1");
 
             // When & Then
@@ -263,8 +249,6 @@ class AuthServiceTest {
         @DisplayName("Should throw exception when password lacks special character")
         void shouldThrowExceptionWhenPasswordLacksSpecialCharacter() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("SecureP12");
 
             // When & Then
@@ -287,8 +271,6 @@ class AuthServiceTest {
 
             for (String password : validPasswords) {
                 // Given
-                LoginRequestDto loginRequest = new LoginRequestDto();
-                loginRequest.setEmail("user@example.com");
                 loginRequest.setPassword(password);
 
                 // When & Then - Should pass password validation but may fail at user lookup
@@ -311,8 +293,6 @@ class AuthServiceTest {
         @DisplayName("Should accept password with exactly 8 characters")
         void shouldAcceptPasswordWithExactly8Characters() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("Secure@1");
 
             // When & Then - Should pass password validation
@@ -336,9 +316,7 @@ class AuthServiceTest {
         @DisplayName("Should throw ResponseStatusException when user not found")
         void shouldThrowResponseStatusExceptionWhenUserNotFound() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("nonexistent@example.com");
-            loginRequest.setPassword("SecureP@1");
 
             when(userRepository.findByEmailId("nonexistent@example.com")).thenReturn(Optional.empty());
 
@@ -355,9 +333,7 @@ class AuthServiceTest {
         @DisplayName("Should find user with valid email and check password match")
         void shouldFindUserWithValidEmailAndCheckPasswordMatch() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
-            loginRequest.setPassword("SecureP@1");
+            // Using default values from setUp()
 
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
@@ -381,8 +357,6 @@ class AuthServiceTest {
         @DisplayName("Should throw ResponseStatusException when password does not match with DB")
         void shouldThrowResponseStatusExceptionWhenPasswordDoesNotMatch() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("WrongP@1");
 
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
@@ -402,9 +376,7 @@ class AuthServiceTest {
         @DisplayName("Should succeed when password matches")
         void shouldSucceedWhenPasswordMatches() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
-            loginRequest.setPassword("SecureP@1");
+            // Using default values from setUp()
 
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
@@ -427,10 +399,7 @@ class AuthServiceTest {
         @Test
         @DisplayName("Should login successfully with valid credentials and return LoginResponseDto")
         void shouldLoginSuccessfullyWithValidCredentials() {
-            // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
-            loginRequest.setPassword("SecureP@1");
+            // Using default values from setUp()
 
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
@@ -453,7 +422,6 @@ class AuthServiceTest {
         @DisplayName("Should login successfully for ADMIN user and return LoginResponseDto")
         void shouldLoginSuccessfullyForAdminUser() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("admin@example.com");
             loginRequest.setPassword("AdminP@1");
 
@@ -478,7 +446,6 @@ class AuthServiceTest {
         @DisplayName("Should login successfully for USER role and return LoginResponseDto")
         void shouldLoginSuccessfullyForUserRole() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("regular@example.com");
             loginRequest.setPassword("UserP@ss1");
 
@@ -508,9 +475,7 @@ class AuthServiceTest {
         @DisplayName("Should validate email before checking repository")
         void shouldValidateEmailBeforeCheckingRepository() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail("invalid-email");
-            loginRequest.setPassword("SecureP@1");
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
@@ -523,8 +488,6 @@ class AuthServiceTest {
         @DisplayName("Should validate password before checking repository")
         void shouldValidatePasswordBeforeCheckingRepository() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
-            loginRequest.setEmail("user@example.com");
             loginRequest.setPassword("short");
 
             // When & Then
@@ -538,7 +501,6 @@ class AuthServiceTest {
         @DisplayName("Should validate both email and password before repository lookup")
         void shouldValidateBothEmailAndPasswordBeforeRepositoryLookup() {
             // Given
-            LoginRequestDto loginRequest = new LoginRequestDto();
             loginRequest.setEmail(null);
             loginRequest.setPassword(null);
 
