@@ -12,12 +12,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(Urls.BASE_URL + Urls.SWEETS_URL)
 @RequiredArgsConstructor
+@Tag(name = "Inventory Management", description = "APIs for managing sweet inventory (purchase and restock)")
 public class InventoryController {
 
     private final InventoryService inventoryService;
@@ -25,6 +29,7 @@ public class InventoryController {
 
     @PostMapping("/{id}" + Urls.PURCHASE_URL)
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Purchase a sweet", description = "Purchase a sweet, decreasing its quantity (User role required)", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<BaseResponse> purchase(
             @PathVariable Long id,
             @RequestBody @Valid PurchaseDto purchaseDto) {
@@ -34,6 +39,7 @@ public class InventoryController {
 
     @PostMapping("/{id}" + Urls.RESTOCK_URL)
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Restock a sweet", description = "Restock a sweet, increasing its quantity (Admin only)", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<BaseResponse> restock(
             @PathVariable Long id,
             @RequestBody @Valid RestockDto restockDto) {
