@@ -2,17 +2,28 @@ package com.api.mithai.sweet.service;
 
 import com.api.mithai.base.constants.Constants;
 import com.api.mithai.base.exception.ResponseStatusException;
+import com.api.mithai.base.response.PaginatedBaseResponse;
 import com.api.mithai.sweet.dto.SweetRequestDto;
 import com.api.mithai.sweet.dto.SweetResponseDto;
 import com.api.mithai.sweet.entity.Sweet;
 import com.api.mithai.sweet.entity.SweetCategory;
 import com.api.mithai.sweet.repository.SweetCategoryRepository;
 import com.api.mithai.sweet.repository.SweetRepository;
+import com.api.mithai.sweet.specification.SweetSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -83,10 +94,88 @@ public class SweetService {
 
     @Transactional
     public void delete(Long id) {
-        Sweet sweet = sweetRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException("Sweet not found", HttpStatus.BAD_REQUEST));
+        if (!sweetRepository.existsById(id)) {
+            throw new ResponseStatusException("Sweet not found", HttpStatus.BAD_REQUEST);
+        }
         
-        sweetRepository.delete(sweet);
+        sweetRepository.deleteById(id);
+    }
+
+    public PaginatedBaseResponse<SweetResponseDto> listAll(Map<String, Object> params) {
+        // Extract pagination parameters
+        Integer page = params.get("page") != null ? 
+                Integer.parseInt(params.get("page").toString()) : 0;
+        Integer size = params.get("size") != null ? 
+                Integer.parseInt(params.get("size").toString()) : 10;
+
+        // Extract sort parameters
+        String sortField = params.get("sortField") != null ? 
+                params.get("sortField").toString() : "id";
+        String sortOrder = params.get("sortOrder") != null ? 
+                params.get("sortOrder").toString().toUpperCase() : "ASC";
+
+        // Extract filter parameters
+        String searchValue = params.get("searchValue") != null ? 
+                params.get("searchValue").toString() : null;
+        Double minPrice = params.get("minValue") != null ? 
+                Double.parseDouble(params.get("minValue").toString()) : null;
+        Double maxPrice = params.get("maxValue") != null ? 
+                Double.parseDouble(params.get("maxValue").toString()) : null;
+
+        // Validate pagination parameters
+        if (page < 0) {
+            page = 0;
+        }
+        if (size <= 0) {
+            size = 10;
+        }
+        if (size > 100) {
+            size = 100; // Max page size limit
+        }
+
+        // Validate sort field
+        if (!isValidSortField(sortField)) {
+            sortField = "id";
+        }
+
+        // Create Sort object
+        Sort sort = sortOrder.equals("DESC") ? 
+                Sort.by(Sort.Direction.DESC, sortField) : 
+                Sort.by(Sort.Direction.ASC, sortField);
+
+        // Create Pageable
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // Build specification for filtering
+        Specification<Sweet> spec = SweetSpecification.withFilters(
+                searchValue, minPrice, maxPrice);
+
+        // Execute query with pagination and filtering
+        Page<Sweet> sweetPage = sweetRepository.findAll(spec, pageable);
+
+        // Map to DTOs
+        List<SweetResponseDto> content = sweetPage.getContent().stream()
+                .map(this::mapToResponseDto)
+                .collect(Collectors.toList());
+
+        // Build paginated response
+        PaginatedBaseResponse<SweetResponseDto> response = new PaginatedBaseResponse<>();
+        response.setList(content);
+        response.setTotalRecords(sweetPage.getTotalElements());
+        response.setCurrentPage((long) sweetPage.getNumber());
+
+        return response;
+    }
+
+    private boolean isValidSortField(String sortField) {
+        if (sortField == null || sortField.trim().isEmpty()) {
+            return false;
+        }
+        // Allowed sort fields
+        return sortField.equals("id") || 
+               sortField.equals("name") || 
+               sortField.equals("price") || 
+               sortField.equals("quantity");
     }
 
     public static String validateName(String name) {

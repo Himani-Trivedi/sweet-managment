@@ -15,9 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,8 +49,8 @@ public class SweetServiceDeleteSweetTest {
         @DisplayName("Should delete sweet successfully when sweet exists")
         void shouldDeleteSweetSuccessfullyWhenSweetExists() {
             // Given
-            when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            doNothing().when(sweetRepository).delete(existingSweet);
+            when(sweetRepository.existsById(1L)).thenReturn(true);
+            doNothing().when(sweetRepository).deleteById(1L);
 
             // When
             assertDoesNotThrow(() -> {
@@ -59,17 +58,16 @@ public class SweetServiceDeleteSweetTest {
             });
 
             // Then
-            verify(sweetRepository, times(1)).findById(1L);
-            verify(sweetRepository, times(1)).delete(existingSweet);
+            verify(sweetRepository, times(1)).existsById(1L);
+            verify(sweetRepository, times(1)).deleteById(1L);
         }
 
         @Test
         @DisplayName("Should delete sweet successfully with different ID")
         void shouldDeleteSweetSuccessfullyWithDifferentId() {
             // Given
-            Sweet anotherSweet = new Sweet(2L, "Rasgulla", testCategory, 200.0, 75);
-            when(sweetRepository.findById(2L)).thenReturn(Optional.of(anotherSweet));
-            doNothing().when(sweetRepository).delete(anotherSweet);
+            when(sweetRepository.existsById(2L)).thenReturn(true);
+            doNothing().when(sweetRepository).deleteById(2L);
 
             // When
             assertDoesNotThrow(() -> {
@@ -77,8 +75,8 @@ public class SweetServiceDeleteSweetTest {
             });
 
             // Then
-            verify(sweetRepository, times(1)).findById(2L);
-            verify(sweetRepository, times(1)).delete(anotherSweet);
+            verify(sweetRepository, times(1)).existsById(2L);
+            verify(sweetRepository, times(1)).deleteById(2L);
         }
     }
 
@@ -90,30 +88,30 @@ public class SweetServiceDeleteSweetTest {
         @DisplayName("Should throw ResponseStatusException when sweet not found")
         void shouldThrowExceptionWhenSweetNotFound() {
             // Given
-            when(sweetRepository.findById(999L)).thenReturn(Optional.empty());
+            when(sweetRepository.existsById(999L)).thenReturn(false);
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
                 sweetService.delete(999L);
             });
             assertEquals("Sweet not found", exception.getMessage());
-            verify(sweetRepository, times(1)).findById(999L);
-            verify(sweetRepository, never()).delete(any(Sweet.class));
+            verify(sweetRepository, times(1)).existsById(999L);
+            verify(sweetRepository, never()).deleteById(anyLong());
         }
 
         @Test
         @DisplayName("Should throw ResponseStatusException when sweet ID is null")
         void shouldThrowExceptionWhenSweetIdIsNull() {
             // Given
-            when(sweetRepository.findById(null)).thenReturn(Optional.empty());
+            when(sweetRepository.existsById(null)).thenReturn(false);
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
                 sweetService.delete(null);
             });
             assertEquals("Sweet not found", exception.getMessage());
-            verify(sweetRepository, times(1)).findById(null);
-            verify(sweetRepository, never()).delete(any(Sweet.class));
+            verify(sweetRepository, times(1)).existsById(null);
+            verify(sweetRepository, never()).deleteById(anyLong());
         }
     }
 
@@ -125,49 +123,45 @@ public class SweetServiceDeleteSweetTest {
         @DisplayName("Should verify correct sweet is deleted")
         void shouldVerifyCorrectSweetIsDeleted() {
             // Given
-            Sweet sweetToDelete = new Sweet(1L, "Gulab Jamun", testCategory, 150.0, 50);
-            when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweetToDelete));
-            doNothing().when(sweetRepository).delete(sweetToDelete);
+            when(sweetRepository.existsById(1L)).thenReturn(true);
+            doNothing().when(sweetRepository).deleteById(1L);
 
             // When
             sweetService.delete(1L);
 
             // Then
-            verify(sweetRepository, times(1)).findById(1L);
-            verify(sweetRepository, times(1)).delete(argThat(sweet ->
-                    sweet.getId().equals(1L) &&
-                    sweet.getName().equals("Gulab Jamun")
-            ));
+            verify(sweetRepository, times(1)).existsById(1L);
+            verify(sweetRepository, times(1)).deleteById(1L);
         }
 
         @Test
         @DisplayName("Should not delete when sweet not found")
         void shouldNotDeleteWhenSweetNotFound() {
             // Given
-            when(sweetRepository.findById(999L)).thenReturn(Optional.empty());
+            when(sweetRepository.existsById(999L)).thenReturn(false);
 
             // When & Then
             assertThrows(ResponseStatusException.class, () -> {
                 sweetService.delete(999L);
             });
 
-            verify(sweetRepository, times(1)).findById(999L);
-            verify(sweetRepository, never()).delete(any(Sweet.class));
+            verify(sweetRepository, times(1)).existsById(999L);
+            verify(sweetRepository, never()).deleteById(anyLong());
         }
 
         @Test
         @DisplayName("Should only call delete once for valid sweet")
         void shouldOnlyCallDeleteOnceForValidSweet() {
             // Given
-            when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            doNothing().when(sweetRepository).delete(existingSweet);
+            when(sweetRepository.existsById(1L)).thenReturn(true);
+            doNothing().when(sweetRepository).deleteById(1L);
 
             // When
             sweetService.delete(1L);
 
             // Then
-            verify(sweetRepository, times(1)).findById(1L);
-            verify(sweetRepository, times(1)).delete(existingSweet);
+            verify(sweetRepository, times(1)).existsById(1L);
+            verify(sweetRepository, times(1)).deleteById(1L);
             verifyNoMoreInteractions(sweetRepository);
         }
     }
