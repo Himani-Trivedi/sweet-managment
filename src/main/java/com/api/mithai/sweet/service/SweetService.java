@@ -130,6 +130,13 @@ public class SweetService {
         return quantity;
     }
 
+    public SweetResponseDto getSweet(Long id){
+        Sweet sweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException("Sweet does not exist", HttpStatus.BAD_REQUEST));
+
+        return mapToResponseDto(sweet);
+    }
+
     private SweetResponseDto mapToResponseDto(Sweet sweet) {
         return new SweetResponseDto(
                 sweet.getId(),
