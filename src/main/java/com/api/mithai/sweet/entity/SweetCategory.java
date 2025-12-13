@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 @Entity
 @Table(name = "sweet_categories")
 @Getter
-@Setter
 @NoArgsConstructor
 public class SweetCategory {
 
@@ -34,6 +32,22 @@ public class SweetCategory {
         }
 
         this.id = id;
+        this.name = name.trim(); // Trim whitespace
+    }
+
+    // Custom setters with validation
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        // Validate name
+        if (name == null) {
+            throw new IllegalArgumentException("Category name cannot be null or empty");
+        }
+        if (name.isEmpty() || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Category name cannot be null or empty");
+        }
         this.name = name.trim(); // Trim whitespace
     }
 }

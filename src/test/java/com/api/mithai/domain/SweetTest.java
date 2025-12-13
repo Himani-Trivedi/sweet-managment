@@ -1,6 +1,7 @@
 package com.api.mithai.domain;
 
 import com.api.mithai.sweet.entity.Sweet;
+import com.api.mithai.sweet.entity.SweetCategory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -23,18 +24,18 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = 50;
 
             // When
-            Sweet sweet = new Sweet(id, name, categoryId, price, quantity);
+            Sweet sweet = new Sweet(id, name, category, price, quantity);
 
             // Then
             assertNotNull(sweet);
             assertEquals(id, sweet.getId());
             assertEquals(name, sweet.getName());
-            assertEquals(categoryId, sweet.getCategoryId());
+            assertEquals(category, sweet.getCategory());
             assertEquals(price, sweet.getPrice());
             assertEquals(quantity, sweet.getQuantity());
         }
@@ -45,13 +46,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = null;
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Sweet name cannot be null or empty");
         }
 
@@ -61,13 +62,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Sweet name cannot be null or empty");
         }
 
@@ -77,13 +78,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "   ";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Sweet name cannot be null or empty");
         }
 
@@ -93,13 +94,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = null;
+            SweetCategory category = null;
             Double price = 150.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Category ID cannot be null");
         }
 
@@ -109,13 +110,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = null;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Price cannot be null");
         }
 
@@ -125,13 +126,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 0.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Price must be greater than zero");
         }
 
@@ -141,13 +142,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = -10.0;
             Integer quantity = 50;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Price must be greater than zero");
         }
 
@@ -157,13 +158,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = null;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Quantity cannot be null");
         }
 
@@ -173,13 +174,13 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = -10;
 
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Quantity cannot be negative");
         }
 
@@ -189,15 +190,14 @@ class SweetTest {
             // Given
             Long id = 1L;
             String name = "Gulab Jamun";
-            Long categoryId = 1L;
+            SweetCategory category = new SweetCategory(1L, "Milk Sweets");
             Double price = 150.0;
             Integer quantity = 0;
 
             // When & Then
             assertDoesNotThrow(() -> {
-                new Sweet(id, name, categoryId, price, quantity);
+                new Sweet(id, name, category, price, quantity);
             }, "Zero quantity should be allowed (out of stock)");
         }
     }
 }
-

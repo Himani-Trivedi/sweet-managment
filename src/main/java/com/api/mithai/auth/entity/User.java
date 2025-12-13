@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Entity
 @Table(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
 public class User {
 
@@ -108,5 +107,74 @@ public class User {
 
     private String hashPassword(String plainPassword) {
         return passwordEncoder.encode(plainPassword);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
+        String trimmedUsername = username.trim();
+        if (trimmedUsername.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (!trimmedUsername.matches("^\\S+$")) {
+            throw new IllegalArgumentException("Username cannot be blank");
+        }
+        this.username = trimmedUsername;
+    }
+
+    public void setEmailId(String emailId) {
+        // Validate emailId
+        if (emailId == null) {
+            throw new IllegalArgumentException("Email ID cannot be null");
+        }
+        String trimmedEmail = emailId.trim();
+        if (trimmedEmail.isEmpty()) {
+            throw new IllegalArgumentException("Email ID cannot be empty");
+        }
+        if (!trimmedEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            throw new IllegalArgumentException("Email ID format is invalid");
+        }
+        this.emailId = trimmedEmail;
+    }
+
+    public void setPassword(String password) {
+        // Validate password
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        if (password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).{8,12}$")) {
+            if (password.length() < 8 || password.length() > 12) {
+                throw new IllegalArgumentException("Password must be between 8 and 12 characters");
+            }
+            if (!password.matches(".*[A-Z].*")) {
+                throw new IllegalArgumentException("Password must contain at least one uppercase letter");
+            }
+            if (!password.matches(".*[a-z].*")) {
+                throw new IllegalArgumentException("Password must contain at least one lowercase letter");
+            }
+            if (!password.matches(".*[^A-Za-z0-9].*")) {
+                throw new IllegalArgumentException("Password must contain at least one special character");
+            }
+        }
+        this.password = hashPassword(password);
+    }
+
+    public void setRoleName(Role roleName) {
+        // Validate roleName
+        if (roleName == null) {
+            throw new IllegalArgumentException("Role name cannot be null");
+        }
+        if (!roleName.equals(Role.USER) && !roleName.equals(Role.ADMIN)) {
+            throw new IllegalArgumentException("Role name cannot be other than USER & ADMIN");
+        }
+        this.roleName = roleName;
     }
 }
