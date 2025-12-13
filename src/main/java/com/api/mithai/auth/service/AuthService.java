@@ -2,7 +2,9 @@ package com.api.mithai.auth.service;
 
 import com.api.mithai.auth.dto.LoginRequestDto;
 import com.api.mithai.auth.dto.LoginResponseDto;
+import com.api.mithai.auth.dto.RegisterAuthRequestDto;
 import com.api.mithai.auth.entity.User;
+import com.api.mithai.auth.enums.Role;
 import com.api.mithai.auth.repository.UserRepository;
 import com.api.mithai.base.exception.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +24,40 @@ public class AuthService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
 
-
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        Optional<User> user = Optional.empty();
-        if (validateEmail(loginRequestDto.getEmail()) && validatePassword(loginRequestDto.getPassword())) {
-            user = userRepository.findByEmailId(loginRequestDto.getEmail());
+        if (!validateEmail(loginRequestDto.getEmail()) || !validatePassword(loginRequestDto.getPassword())) {
+            throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
+        }
 
-            if (user.isEmpty()) {
-                throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
-            }
+        Optional<User> user = userRepository.findByEmailId(loginRequestDto.getEmail());
+        if (user.isEmpty()) {
+            throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
+        }
 
-            if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.get().getPassword())) {
-                throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
-            }
-
-        } else {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.get().getPassword())) {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
         return new LoginResponseDto(user.get().getEmailId()
                 , "accessTOken"
                 , user.get().getRoleName());
+    }
+
+    public void register(RegisterAuthRequestDto registerAuthRequestDto) {
+        if (!validateEmail(registerAuthRequestDto.getEmailId()) || !validatePassword(registerAuthRequestDto.getPassword())) {
+            throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
+        }
+
+        if (userRepository.existsByEmailId(registerAuthRequestDto.getEmailId())) {
+            throw new ResponseStatusException("User with this email already exists", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = new User();
+        user.setEmailId(registerAuthRequestDto.getEmailId());
+        user.setPassword(registerAuthRequestDto.getPassword());
+        user.setUsername(registerAuthRequestDto.getEmailId().substring(0,5));
+        user.setRoleName(Role.USER);
+        userRepository.save(user);
     }
 
     public boolean validateEmail(String emailId) {

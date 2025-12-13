@@ -64,7 +64,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Email ID cannot be null", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -79,7 +79,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Email ID cannot be empty", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -94,7 +94,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Email ID cannot be blank", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -109,7 +109,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Email ID format is invalid", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
         }
@@ -129,7 +129,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password cannot be null", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -144,7 +144,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password cannot be empty", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -159,7 +159,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password must be between 8 and 12 characters", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -174,7 +174,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password must be between 8 and 12 characters", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -189,7 +189,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password must contain at least one uppercase letter", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -204,7 +204,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password must contain at least one lowercase letter", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -219,7 +219,7 @@ public class AuthServiceRegisterUserTest {
                     authService.register(registerRequest);
                 });
                 assertEquals("Password must contain at least one special character", exception.getMessage());
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
         }
@@ -234,15 +234,14 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("existing@example.com");
 
-                User existingUser = new User(1L, "existinguser", "existing@example.com", "SecureP@1", Role.USER);
-                when(userRepository.findByEmailId("existing@example.com")).thenReturn(Optional.of(existingUser));
+                when(userRepository.existsByEmailId("existing@example.com")).thenReturn(true);
 
                 // When & Then
                 ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
                     authService.register(registerRequest);
                 });
                 assertEquals("User with this email already exists", exception.getMessage());
-                verify(userRepository, times(1)).findByEmailId("existing@example.com");
+                verify(userRepository, times(1)).existsByEmailId("existing@example.com");
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -252,7 +251,7 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("newuser@example.com");
 
-                when(userRepository.findByEmailId("newuser@example.com")).thenReturn(Optional.empty());
+                when(userRepository.existsByEmailId("newuser@example.com")).thenReturn(false);
                 when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
                     User user = invocation.getArgument(0);
                     user.setId(1L);
@@ -263,7 +262,7 @@ public class AuthServiceRegisterUserTest {
                 assertDoesNotThrow(() -> {
                     authService.register(registerRequest);
                 });
-                verify(userRepository, times(1)).findByEmailId("newuser@example.com");
+                verify(userRepository, times(1)).existsByEmailId("newuser@example.com");
             }
         }
 
@@ -277,7 +276,7 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("newuser@example.com");
 
-                when(userRepository.findByEmailId("newuser@example.com")).thenReturn(Optional.empty());
+                when(userRepository.existsByEmailId("newuser@example.com")).thenReturn(false);
                 when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
                     User user = invocation.getArgument(0);
                     user.setId(1L);
@@ -285,10 +284,9 @@ public class AuthServiceRegisterUserTest {
                 });
 
                 // When
-                var result = authService.register(registerRequest);
+                authService.register(registerRequest);
 
                 // Then
-                assertNotNull(result);
                 verify(userRepository, times(1)).save(argThat(user ->
                         user.getRoleName() == Role.USER
                 ));
@@ -305,7 +303,7 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("newuser@example.com");
 
-                when(userRepository.findByEmailId("newuser@example.com")).thenReturn(Optional.empty());
+                when(userRepository.existsByEmailId("newuser@example.com")).thenReturn(false);
                 when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
                     User user = invocation.getArgument(0);
                     user.setId(1L);
@@ -313,11 +311,10 @@ public class AuthServiceRegisterUserTest {
                 });
 
                 // When
-                var result = authService.register(registerRequest);
+                authService.register(registerRequest);
 
                 // Then
-                assertNotNull(result);
-                verify(userRepository, times(1)).findByEmailId("newuser@example.com");
+                verify(userRepository, times(1)).existsByEmailId("newuser@example.com");
                 verify(userRepository, times(1)).save(any(User.class));
             }
 
@@ -327,7 +324,7 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("newuser@example.com");
 
-                when(userRepository.findByEmailId("newuser@example.com")).thenReturn(Optional.empty());
+                when(userRepository.existsByEmailId("newuser@example.com")).thenReturn(false);
                 when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
                     User user = invocation.getArgument(0);
                     user.setId(1L);
@@ -351,7 +348,7 @@ public class AuthServiceRegisterUserTest {
                 // Given
                 registerRequest.setEmailId("newuser@example.com");
 
-                when(userRepository.findByEmailId("newuser@example.com")).thenReturn(Optional.empty());
+                when(userRepository.existsByEmailId("newuser@example.com")).thenReturn(false);
                 when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
                     User user = invocation.getArgument(0);
                     user.setId(1L);
@@ -383,7 +380,7 @@ public class AuthServiceRegisterUserTest {
                 assertThrows(IllegalArgumentException.class, () -> {
                     authService.register(registerRequest);
                 });
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -397,7 +394,7 @@ public class AuthServiceRegisterUserTest {
                 assertThrows(IllegalArgumentException.class, () -> {
                     authService.register(registerRequest);
                 });
-                verify(userRepository, never()).findByEmailId(anyString());
+                verify(userRepository, never()).existsByEmailId(anyString());
                 verify(userRepository, never()).save(any(User.class));
             }
 
@@ -408,14 +405,14 @@ public class AuthServiceRegisterUserTest {
                 registerRequest.setEmailId("existing@example.com");
 
                 User existingUser = new User(1L, "existinguser", "existing@example.com", "SecureP@1", Role.USER);
-                when(userRepository.findByEmailId("existing@example.com")).thenReturn(Optional.of(existingUser));
+                when(userRepository.existsByEmailId("existing@example.com")).thenReturn(true);
 
                 // When & Then
                 ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
                     authService.register(registerRequest);
                 });
                 assertEquals("User with this email already exists", exception.getMessage());
-                verify(userRepository, times(1)).findByEmailId("existing@example.com");
+                verify(userRepository, times(1)).existsByEmailId("existing@example.com");
                 verify(userRepository, never()).save(any(User.class));
             }
         }
