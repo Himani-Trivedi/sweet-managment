@@ -1,6 +1,6 @@
 package com.api.mithai.auth.controller;
 
-import com.api.mithai.auth.constants.Constants;
+import com.api.mithai.base.constants.Constants;
 import com.api.mithai.auth.dto.RegisterAuthRequestDto;
 import com.api.mithai.auth.service.AuthService;
 import com.api.mithai.base.constants.Urls;
@@ -23,7 +23,7 @@ public class AuthController {
     private final AuthService authService;
     private final ResponseHandler responseHandler;
 
-    @PostMapping(Urls.AUTH_REGISTER_URL)
+    @PostMapping(Urls.REGISTER_URL)
     public ResponseEntity<BaseResponse> register(@RequestBody @Valid RegisterAuthRequestDto registerAuthRequestDto) {
         authService.register(registerAuthRequestDto);
         return responseHandler.okResponse(HttpStatus.CREATED, Constants.USER_CREATED_SUCCESSFULLY);

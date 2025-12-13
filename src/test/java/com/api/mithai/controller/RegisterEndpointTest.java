@@ -1,6 +1,6 @@
 package com.api.mithai.controller;
 
-import com.api.mithai.auth.constants.Constants;
+import com.api.mithai.base.constants.Constants;
 import com.api.mithai.auth.controller.AuthController;
 import com.api.mithai.auth.dto.RegisterAuthRequestDto;
 import com.api.mithai.auth.service.AuthService;
@@ -79,7 +79,7 @@ public class RegisterEndpointTest {
                     .thenReturn(responseEntity);
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated())
@@ -116,7 +116,7 @@ public class RegisterEndpointTest {
                     .when(authService).register(any(RegisterAuthRequestDto.class));
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
@@ -145,7 +145,7 @@ public class RegisterEndpointTest {
                     .when(authService).register(any(RegisterAuthRequestDto.class));
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
@@ -173,7 +173,7 @@ public class RegisterEndpointTest {
                     .when(authService).register(any(RegisterAuthRequestDto.class));
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
@@ -197,7 +197,7 @@ public class RegisterEndpointTest {
             String requestBody = objectMapper.writeValueAsString(registerRequest);
 
             // When & Then - @NotBlank validation happens before service is called
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
@@ -219,7 +219,7 @@ public class RegisterEndpointTest {
             String requestBody = objectMapper.writeValueAsString(registerRequest);
 
             // When & Then - @NotBlank validation happens before service is called
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())

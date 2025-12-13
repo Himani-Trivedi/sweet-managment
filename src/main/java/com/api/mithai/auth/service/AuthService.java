@@ -25,16 +25,19 @@ public class AuthService {
     PasswordEncoder passwordEncoder;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        if (!validateEmail(loginRequestDto.getEmail()) || !validatePassword(loginRequestDto.getPassword())) {
+        String emailId = validateEmail(loginRequestDto.getEmail());
+        String password = loginRequestDto.getPassword();
+
+        if (!validatePassword(password)) {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<User> user = userRepository.findByEmailId(loginRequestDto.getEmail());
+        Optional<User> user = userRepository.findByEmailId(emailId);
         if (user.isEmpty()) {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.get().getPassword())) {
+        if (!passwordEncoder.matches(password, user.get().getPassword())) {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
@@ -44,23 +47,26 @@ public class AuthService {
     }
 
     public void register(RegisterAuthRequestDto registerAuthRequestDto) {
-        if (!validateEmail(registerAuthRequestDto.getEmailId()) || !validatePassword(registerAuthRequestDto.getPassword())) {
+        String emailId = validateEmail(registerAuthRequestDto.getEmailId());
+        String password = registerAuthRequestDto.getPassword();
+
+        if (!validatePassword(password)) {
             throw new ResponseStatusException("Invalid email or password", HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByEmailId(registerAuthRequestDto.getEmailId())) {
+        if (userRepository.existsByEmailId(emailId)) {
             throw new ResponseStatusException("User with this email already exists", HttpStatus.BAD_REQUEST);
         }
 
         User user = new User();
-        user.setEmailId(registerAuthRequestDto.getEmailId());
-        user.setPassword(registerAuthRequestDto.getPassword());
-        user.setUsername(registerAuthRequestDto.getEmailId().substring(0,5));
+        user.setEmailId(emailId);
+        user.setPassword(password);
+        user.setUsername(emailId.substring(0,5));
         user.setRoleName(Role.USER);
         userRepository.save(user);
     }
 
-    public boolean validateEmail(String emailId) {
+    public static String validateEmail(String emailId) {
         if (emailId == null) {
             throw new IllegalArgumentException("Email ID cannot be null");
         }
@@ -77,10 +83,10 @@ public class AuthService {
             throw new IllegalArgumentException("Email ID format is invalid");
         }
 
-        return true;
+        return trimmedEmail;
     }
 
-    public boolean validatePassword(String password) {
+    public static boolean validatePassword(String password) {
         // Validate password
         if (password == null) {
             throw new IllegalArgumentException("Password cannot be null");
@@ -101,6 +107,31 @@ public class AuthService {
             if (!password.matches(".*[^A-Za-z0-9].*")) {
                 throw new IllegalArgumentException("Password must contain at least one special character");
             }
+        }
+        return true;
+    }
+
+    public static String validateUsername(String username) {
+        if (username == null) {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
+        String trimmedUsername = username.trim();
+        if (trimmedUsername.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (!trimmedUsername.matches("^\\S+$")) {
+            throw new IllegalArgumentException("Username cannot be blank");
+        }
+        return trimmedUsername;
+    }
+
+    public static boolean validateRoleName(Role roleName) {
+        // Validate roleName
+        if (roleName == null) {
+            throw new IllegalArgumentException("Role name cannot be null");
+        }
+        if (!roleName.equals(Role.USER) && !roleName.equals(Role.ADMIN)) {
+            throw new IllegalArgumentException("Role name cannot be other than USER & ADMIN");
         }
         return true;
     }

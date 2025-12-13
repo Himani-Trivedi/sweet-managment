@@ -1,4 +1,4 @@
-package com.api.mithai.auth.constants;
+package com.api.mithai.base.constants;
 
 public class Constants {
     public static final String USER_CREATED_SUCCESSFULLY = "User Created successfully";

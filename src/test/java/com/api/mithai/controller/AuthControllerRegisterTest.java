@@ -72,7 +72,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated())
@@ -99,7 +99,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated());
@@ -125,7 +125,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated());
@@ -149,7 +149,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated())
@@ -180,7 +180,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated());
@@ -207,7 +207,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When & Then
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated());
@@ -234,7 +234,7 @@ public class AuthControllerRegisterTest {
                     .thenReturn(responseEntity);
 
             // When
-            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.REGISTER_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isCreated())
