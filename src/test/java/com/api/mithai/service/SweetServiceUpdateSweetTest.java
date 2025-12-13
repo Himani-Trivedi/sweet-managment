@@ -271,7 +271,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setCategoryId(null);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
@@ -312,7 +311,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setPrice(null);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -329,7 +327,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setPrice(0.0);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -346,7 +343,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setPrice(-10.0);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -368,7 +364,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setQuantity(null);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -385,7 +380,6 @@ public class SweetServiceUpdateSweetTest {
             // Given
             updateSweetRequest.setQuantity(-5);
             when(sweetRepository.findById(1L)).thenReturn(Optional.of(existingSweet));
-            when(sweetRepository.existsByNameIgnoreCaseAndIdNot("Rasgulla", 1L)).thenReturn(false);
 
             // When & Then
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {

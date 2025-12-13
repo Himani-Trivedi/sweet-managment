@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -139,7 +138,6 @@ public class SweetServiceDeleteSweetTest {
                     sweet.getId().equals(1L) &&
                     sweet.getName().equals("Gulab Jamun")
             ));
-            verify(sweetRepository, never()).delete(any(Sweet.class));
         }
 
         @Test

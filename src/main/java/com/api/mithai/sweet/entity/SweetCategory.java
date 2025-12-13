@@ -17,8 +17,6 @@ public class SweetCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Category name cannot be null or empty")
-    @Pattern(regexp = "^\\S.*\\S$|^\\S+$", message = "Category name cannot be blank")
     @Column(nullable = false, unique = true)
     private String name;
 
