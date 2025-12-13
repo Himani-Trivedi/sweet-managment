@@ -51,7 +51,7 @@ public class RegisterEndpointTest {
 
     @BeforeEach
     void setUp() {
-        globalExceptionHandler = new GlobalExceptionHandler(responseHandler);
+        globalExceptionHandler = new GlobalExceptionHandler();
         mockMvc = MockMvcBuilders.standaloneSetup(authController)
                 .setControllerAdvice(globalExceptionHandler)
                 .build();
@@ -110,7 +110,7 @@ public class RegisterEndpointTest {
             registerRequest.setEmailId("existing@example.com");
             registerRequest.setPassword("SecureP@1");
             String requestBody = objectMapper.writeValueAsString(registerRequest);
-            String errorMessage = "User with this email already exists";
+            String errorMessage = Constants.USER_EMAIL_ALREADY_EXISTS;
 
             doThrow(new ResponseStatusException(errorMessage, HttpStatus.BAD_REQUEST))
                     .when(authService).register(any(RegisterAuthRequestDto.class));
@@ -139,7 +139,7 @@ public class RegisterEndpointTest {
             registerRequest.setEmailId("user@example.com");
             registerRequest.setPassword("weak"); // Weak password - too short, no uppercase, no special char
             String requestBody = objectMapper.writeValueAsString(registerRequest);
-            String errorMessage = "Invalid email or password";
+            String errorMessage = Constants.INVALID_EMAIL_OR_PASSWORD;
 
             doThrow(new ResponseStatusException(errorMessage, HttpStatus.BAD_REQUEST))
                     .when(authService).register(any(RegisterAuthRequestDto.class));
@@ -167,7 +167,7 @@ public class RegisterEndpointTest {
             registerRequest.setEmailId("invalid-email"); // Invalid email format
             registerRequest.setPassword("SecureP@1");
             String requestBody = objectMapper.writeValueAsString(registerRequest);
-            String errorMessage = "Invalid email or password";
+            String errorMessage = Constants.INVALID_EMAIL_OR_PASSWORD;
 
             doThrow(new ResponseStatusException(errorMessage, HttpStatus.BAD_REQUEST))
                     .when(authService).register(any(RegisterAuthRequestDto.class));
@@ -184,6 +184,50 @@ public class RegisterEndpointTest {
                     "invalid-email".equals(dto.getEmailId()) &&
                     "SecureP@1".equals(dto.getPassword())
             ));
+            // Verify ResponseHandler was never called
+            verify(responseHandler, never()).okResponse(any(HttpStatus.class), anyString());
+        }
+
+        @Test
+        @DisplayName("Should return 400 BAD REQUEST when email is empty - @NotBlank validation")
+        void shouldReturn400BadRequestWhenEmailIsEmpty() throws Exception {
+            // Given
+            registerRequest.setEmailId(""); // Empty email - @NotBlank validation should catch this
+            registerRequest.setPassword("SecureP@1");
+            String requestBody = objectMapper.writeValueAsString(registerRequest);
+
+            // When & Then - @NotBlank validation happens before service is called
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(false))
+                    .andExpect(jsonPath("$.message").exists());
+
+            // Verify service was NEVER called because validation fails before reaching controller method
+            verify(authService, never()).register(any(RegisterAuthRequestDto.class));
+            // Verify ResponseHandler was never called
+            verify(responseHandler, never()).okResponse(any(HttpStatus.class), anyString());
+        }
+
+        @Test
+        @DisplayName("Should return 400 BAD REQUEST when password is empty - @NotBlank validation")
+        void shouldReturn400BadRequestWhenPasswordIsEmpty() throws Exception {
+            // Given
+            registerRequest.setEmailId("user@example.com");
+            registerRequest.setPassword(""); // Empty password - @NotBlank validation should catch this
+            String requestBody = objectMapper.writeValueAsString(registerRequest);
+
+            // When & Then - @NotBlank validation happens before service is called
+            mockMvc.perform(post(Urls.BASE_URL + Urls.AUTH_URL + Urls.AUTH_REGISTER_URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(false))
+                    .andExpect(jsonPath("$.message").exists());
+
+            // Verify service was NEVER called because validation fails before reaching controller method
+            verify(authService, never()).register(any(RegisterAuthRequestDto.class));
             // Verify ResponseHandler was never called
             verify(responseHandler, never()).okResponse(any(HttpStatus.class), anyString());
         }
