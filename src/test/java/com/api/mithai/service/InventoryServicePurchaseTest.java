@@ -5,9 +5,8 @@ import com.api.mithai.sweet.dto.PurchaseDto;
 import com.api.mithai.sweet.dto.SweetResponseDto;
 import com.api.mithai.sweet.entity.Sweet;
 import com.api.mithai.sweet.entity.SweetCategory;
-import com.api.mithai.sweet.repository.SweetCategoryRepository;
 import com.api.mithai.sweet.repository.SweetRepository;
-import com.api.mithai.sweet.service.SweetService;
+import com.api.mithai.sweet.service.InventoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,21 +20,17 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("SweetService Purchase Tests - TDD Red Phase")
-public class SweetServicePurchaseTest {
+@DisplayName("InventoryService Purchase Tests - TDD Red Phase")
+public class InventoryServicePurchaseTest {
 
     @Mock
     private SweetRepository sweetRepository;
 
-    @Mock
-    private SweetCategoryRepository sweetCategoryRepository;
-
     @InjectMocks
-    private SweetService sweetService;
+    private InventoryService inventoryService;
 
     private PurchaseDto purchaseDto;
     private Sweet existingSweet;
@@ -62,7 +57,7 @@ public class SweetServicePurchaseTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.purchase(1L, purchaseDto);
+            SweetResponseDto result = inventoryService.purchase(1L, purchaseDto);
 
             // Then
             assertNotNull(result);
@@ -83,7 +78,7 @@ public class SweetServicePurchaseTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.purchase(1L, purchaseDto);
+            SweetResponseDto result = inventoryService.purchase(1L, purchaseDto);
 
             // Then
             assertNotNull(result);
@@ -104,7 +99,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(999L, purchaseDto);
+                inventoryService.purchase(999L, purchaseDto);
             });
             assertEquals("Sweet not found", exception.getMessage());
             verify(sweetRepository, times(1)).findById(999L);
@@ -125,7 +120,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(1L, purchaseDto);
+                inventoryService.purchase(1L, purchaseDto);
             });
             assertEquals("Purchase quantity cannot be null", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -141,7 +136,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(1L, purchaseDto);
+                inventoryService.purchase(1L, purchaseDto);
             });
             assertEquals("Purchase quantity must be greater than zero", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -157,7 +152,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(1L, purchaseDto);
+                inventoryService.purchase(1L, purchaseDto);
             });
             assertEquals("Purchase quantity must be greater than zero", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -173,7 +168,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(1L, purchaseDto);
+                inventoryService.purchase(1L, purchaseDto);
             });
             assertEquals("Purchase quantity cannot exceed available quantity", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -194,7 +189,7 @@ public class SweetServicePurchaseTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.purchase(1L, purchaseDto);
+            SweetResponseDto result = inventoryService.purchase(1L, purchaseDto);
 
             // Then
             assertEquals(25, result.getQuantity()); // 50 - 25 = 25
@@ -214,7 +209,7 @@ public class SweetServicePurchaseTest {
 
             // When & Then
             assertThrows(ResponseStatusException.class, () -> {
-                sweetService.purchase(1L, purchaseDto);
+                inventoryService.purchase(1L, purchaseDto);
             });
 
             verify(sweetRepository, times(1)).findById(1L);

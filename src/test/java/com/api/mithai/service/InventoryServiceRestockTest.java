@@ -5,9 +5,8 @@ import com.api.mithai.sweet.dto.RestockDto;
 import com.api.mithai.sweet.dto.SweetResponseDto;
 import com.api.mithai.sweet.entity.Sweet;
 import com.api.mithai.sweet.entity.SweetCategory;
-import com.api.mithai.sweet.repository.SweetCategoryRepository;
 import com.api.mithai.sweet.repository.SweetRepository;
-import com.api.mithai.sweet.service.SweetService;
+import com.api.mithai.sweet.service.InventoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,21 +20,17 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("SweetService Restock Tests - TDD Red Phase")
-public class SweetServiceRestockTest {
+@DisplayName("InventoryService Restock Tests - TDD Red Phase")
+public class InventoryServiceRestockTest {
 
     @Mock
     private SweetRepository sweetRepository;
 
-    @Mock
-    private SweetCategoryRepository sweetCategoryRepository;
-
     @InjectMocks
-    private SweetService sweetService;
+    private InventoryService inventoryService;
 
     private RestockDto restockDto;
     private Sweet existingSweet;
@@ -62,7 +57,7 @@ public class SweetServiceRestockTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.restock(1L, restockDto);
+            SweetResponseDto result = inventoryService.restock(1L, restockDto);
 
             // Then
             assertNotNull(result);
@@ -83,7 +78,7 @@ public class SweetServiceRestockTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.restock(1L, restockDto);
+            SweetResponseDto result = inventoryService.restock(1L, restockDto);
 
             // Then
             assertNotNull(result);
@@ -104,7 +99,7 @@ public class SweetServiceRestockTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.restock(999L, restockDto);
+                inventoryService.restock(999L, restockDto);
             });
             assertEquals("Sweet not found", exception.getMessage());
             verify(sweetRepository, times(1)).findById(999L);
@@ -125,7 +120,7 @@ public class SweetServiceRestockTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.restock(1L, restockDto);
+                inventoryService.restock(1L, restockDto);
             });
             assertEquals("Restock quantity cannot be null", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -141,7 +136,7 @@ public class SweetServiceRestockTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.restock(1L, restockDto);
+                inventoryService.restock(1L, restockDto);
             });
             assertEquals("Restock quantity must be greater than zero", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -157,7 +152,7 @@ public class SweetServiceRestockTest {
 
             // When & Then
             ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
-                sweetService.restock(1L, restockDto);
+                inventoryService.restock(1L, restockDto);
             });
             assertEquals("Restock quantity must be greater than zero", exception.getMessage());
             verify(sweetRepository, times(1)).findById(1L);
@@ -178,7 +173,7 @@ public class SweetServiceRestockTest {
             when(sweetRepository.save(any(Sweet.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
             // When
-            SweetResponseDto result = sweetService.restock(1L, restockDto);
+            SweetResponseDto result = inventoryService.restock(1L, restockDto);
 
             // Then
             assertEquals(80, result.getQuantity()); // 50 + 30 = 80
@@ -198,7 +193,7 @@ public class SweetServiceRestockTest {
 
             // When & Then
             assertThrows(ResponseStatusException.class, () -> {
-                sweetService.restock(1L, restockDto);
+                inventoryService.restock(1L, restockDto);
             });
 
             verify(sweetRepository, times(1)).findById(1L);
