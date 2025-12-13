@@ -11,4 +11,6 @@ public class Urls {
     public static final String REGISTER_URL = "/register";
 
     public static final String SWEET_URL = "/sweet";
+
+    public static final String ACCESS_TOKEN = "accessToken";
 }

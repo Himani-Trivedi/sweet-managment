@@ -7,6 +7,7 @@ import com.api.mithai.auth.entity.User;
 import com.api.mithai.auth.enums.Role;
 import com.api.mithai.auth.repository.UserRepository;
 import com.api.mithai.base.exception.ResponseStatusException;
+import com.api.mithai.security.AccessTokenManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService {
 
-    UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AccessTokenManager accessTokenManager;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         String emailId = validateEmail(loginRequestDto.getEmail());
@@ -42,7 +44,7 @@ public class AuthService {
         }
 
         return new LoginResponseDto(user.get().getEmailId()
-                , "accessTOken"
+                , accessTokenManager.getAccessToken(user.get())
                 , user.get().getRoleName());
     }
 

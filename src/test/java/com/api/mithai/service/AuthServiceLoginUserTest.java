@@ -7,6 +7,7 @@ import com.api.mithai.auth.enums.Role;
 import com.api.mithai.auth.repository.UserRepository;
 import com.api.mithai.auth.service.AuthService;
 import com.api.mithai.base.exception.ResponseStatusException;
+import com.api.mithai.security.AccessTokenManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -34,7 +35,10 @@ class AuthServiceLoginUserTest {
     private UserRepository userRepository;
 
     @Mock
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AccessTokenManager accessTokenManager;
 
     @InjectMocks
     private AuthService authService;
@@ -338,6 +342,7 @@ class AuthServiceLoginUserTest {
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
             when(passwordEncoder.matches("SecureP@1", existingUser.getPassword())).thenReturn(true);
+            when(accessTokenManager.getAccessToken(existingUser)).thenReturn("mock-access-token");
 
             // When
             var result = authService.login(loginRequest);
@@ -381,6 +386,7 @@ class AuthServiceLoginUserTest {
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
             when(passwordEncoder.matches("SecureP@1", existingUser.getPassword())).thenReturn(true);
+            when(accessTokenManager.getAccessToken(existingUser)).thenReturn("mock-access-token");
 
             // When
             var result = authService.login(loginRequest);
@@ -404,6 +410,7 @@ class AuthServiceLoginUserTest {
             User existingUser = new User(1L, "johndoe", "user@example.com", "SecureP@1", Role.USER);
             when(userRepository.findByEmailId("user@example.com")).thenReturn(Optional.of(existingUser));
             when(passwordEncoder.matches("SecureP@1", existingUser.getPassword())).thenReturn(true);
+            when(accessTokenManager.getAccessToken(existingUser)).thenReturn("mock-access-token");
 
             // When
             LoginResponseDto result = authService.login(loginRequest);
@@ -416,6 +423,7 @@ class AuthServiceLoginUserTest {
             assertFalse(result.getAccessToken().isEmpty());
             verify(userRepository, times(1)).findByEmailId("user@example.com");
             verify(passwordEncoder, times(1)).matches("SecureP@1", existingUser.getPassword());
+            verify(accessTokenManager, times(1)).getAccessToken(existingUser);
         }
 
         @Test
@@ -428,6 +436,7 @@ class AuthServiceLoginUserTest {
             User adminUser = new User(2L, "admin", "admin@example.com", "AdminP@1", Role.ADMIN);
             when(userRepository.findByEmailId("admin@example.com")).thenReturn(Optional.of(adminUser));
             when(passwordEncoder.matches("AdminP@1", adminUser.getPassword())).thenReturn(true);
+            when(accessTokenManager.getAccessToken(adminUser)).thenReturn("mock-admin-access-token");
 
             // When
             LoginResponseDto result = authService.login(loginRequest);
@@ -440,6 +449,7 @@ class AuthServiceLoginUserTest {
             assertFalse(result.getAccessToken().isEmpty());
             verify(userRepository, times(1)).findByEmailId("admin@example.com");
             verify(passwordEncoder, times(1)).matches("AdminP@1", adminUser.getPassword());
+            verify(accessTokenManager, times(1)).getAccessToken(adminUser);
         }
 
         @Test
@@ -452,6 +462,7 @@ class AuthServiceLoginUserTest {
             User regularUser = new User(3L, "regularuser", "regular@example.com", "UserP@ss1", Role.USER);
             when(userRepository.findByEmailId("regular@example.com")).thenReturn(Optional.of(regularUser));
             when(passwordEncoder.matches("UserP@ss1", regularUser.getPassword())).thenReturn(true);
+            when(accessTokenManager.getAccessToken(regularUser)).thenReturn("mock-user-access-token");
 
             // When
             LoginResponseDto result = authService.login(loginRequest);
@@ -464,6 +475,7 @@ class AuthServiceLoginUserTest {
             assertFalse(result.getAccessToken().isEmpty());
             verify(userRepository, times(1)).findByEmailId("regular@example.com");
             verify(passwordEncoder, times(1)).matches("UserP@ss1", regularUser.getPassword());
+            verify(accessTokenManager, times(1)).getAccessToken(regularUser);
         }
     }
 
