@@ -2,7 +2,6 @@
 
 A comprehensive Spring Boot REST API for managing a sweet shop inventory system. This application provides authentication, authorization, and full CRUD operations for managing sweets, categories, and inventory.
 
-
 ## 🎯 Overview
 
 Sweet Management System is a backend API built with Spring Boot that enables:
@@ -54,6 +53,10 @@ Sweet Management System is a backend API built with Spring Boot that enables:
 
 ## 📁 Project Structure
 
+### Overview
+
+The project is organized into modular packages following domain-driven design principles:
+
 ```
 src/main/java/com/api/mithai/
 ├── auth/        # Authentication (login, register, users, roles)
@@ -61,6 +64,44 @@ src/main/java/com/api/mithai/
 ├── base/        # Common configs, constants, exception handling, responses
 └── security/    # JWT security, filters, and Spring Security configuration
 ```
+
+### Module Breakdown
+
+#### 1. **auth/** - Authentication Module
+Handles user registration, login, and user management:
+- **Controller**: Exposes `/api/auth/register` and `/api/auth/login` endpoints
+- **Service**: Contains authentication business logic, password validation, and JWT token generation
+- **Entity**: User entity with role-based access control
+- **Repository**: User data access operations
+- **DTOs**: Request/Response objects for authentication operations
+
+#### 2. **sweet/** - Sweet Management Module
+Core business logic for managing sweets and inventory:
+- **Controllers**: 
+  - `SweetController`: CRUD operations for sweets
+  - `InventoryController`: Purchase and restock operations
+  - `SweetCategoryController`: Category listing
+- **Service**: Business logic for sweet operations, validation, and inventory management
+- **Entity**: Sweet and SweetCategory entities with relationships
+- **Repository**: Data access with custom queries and specifications
+- **Specification**: JPA Specifications for advanced search and filtering
+- **DTOs**: Data transfer objects for sweet operations
+
+#### 3. **base/** - Common/Base Module
+Shared components used across the application:
+- **Config**: Application configurations, data initialization, CORS, and OpenAPI setup
+- **Constants**: Application-wide constants and URL definitions
+- **Exception**: Global exception handler and custom exceptions
+- **Response**: Standardized response wrappers (BaseResponse, PaginatedBaseResponse)
+- **Service**: Base service with common utilities
+
+#### 4. **security/** - Security Module
+JWT-based authentication and authorization:
+- **JwtTokenProvider**: Token generation and validation
+- **JwtAuthenticationFilter**: Filter to intercept requests and validate JWT tokens
+- **SecurityConfig**: Spring Security configuration with filter chains
+- **UserDetailsService**: Custom user details service for authentication
+- **AccessTokenManager**: Token management utilities
 
 ## 📋 Prerequisites
 
@@ -270,6 +311,21 @@ Restock a sweet, increasing its quantity (Admin only).
 
 ## 🔐 Authentication & Authorization
 
+### Overview
+
+The application implements a stateless JWT-based authentication system. Authentication flow involves:
+1. User registration with email validation and password hashing
+2. Login to receive a JWT access token
+3. Token validation on protected endpoints
+4. Role-based authorization for different operations
+
+**Security Features:**
+- BCrypt password hashing (10 rounds)
+- JWT tokens with expiration (4 hours default)
+- Stateless authentication (no server-side sessions)
+- Role-based access control (RBAC)
+- CORS configuration for frontend integration
+
 ### User Roles
 
 1. **ADMIN**: Full access to all endpoints
@@ -303,23 +359,18 @@ On first startup, the application automatically creates an admin user:
 
 ## 🗄️ Database Schema
 
-### Users Table
-- `id` (Long, Primary Key)
-- `username` (String, Not Null)
-- `emailId` (String, Unique, Not Null)
-- `password` (String, Hashed, Not Null)
-- `roleName` (Enum: USER, ADMIN)
+### Overview
 
-### Sweets Table
-- `id` (Long, Primary Key)
-- `name` (String, Not Null)
-- `category_id` (Foreign Key to SweetCategory)
-- `price` (Double, Not Null)
-- `quantity` (Integer, Not Null)
+The application uses PostgreSQL as the relational database with three main entities:
+- **Users**: Stores user accounts with authentication information
+- **Sweets**: Product catalog with inventory quantities
+- **SweetCategories**: Category classification for sweets
 
-### Sweet Categories Table
-- `id` (Long, Primary Key)
-- `name` (String, Unique, Not Null)
+**Database Features:**
+- Automatic schema generation via Hibernate DDL auto-update
+- Unique constraints on email and category names
+- Enum types for user roles
+- Indexed fields for performance
 
 ### Initial Data
 
@@ -339,6 +390,22 @@ On startup, the application initializes:
 
 ### Test Structure
 
+#### Overview
+
+The project follows Test-Driven Development (TDD) principles with comprehensive test coverage:
+
+**Test Types:**
+- **Controller Tests**: Integration tests verifying API endpoints, request/response handling, and security filters
+- **Service Tests**: Unit tests for business logic, validation, and data transformations
+- **Domain Tests**: Entity validation tests ensuring data integrity and business rules
+
+**Testing Approach:**
+- Tests are organized mirroring the main source structure
+- Uses Spring Boot Test framework for integration testing
+- MockMvc for controller testing
+- JUnit 5 for test execution
+- Spring Security Test for authentication testing
+
 Tests are located in `src/test/java/com/api/mithai/`:
 
 - **Controller Tests**: Integration tests for API endpoints
@@ -348,7 +415,7 @@ Tests are located in `src/test/java/com/api/mithai/`:
 
 ## 🌐 Frontend Integration
 
-This backend API is designed to work with a React frontend. The frontend repository can be found at:
+**Frontend Repository:**
 - **Frontend Repo**: [sweet-application](https://github.com/Himani-Trivedi/sweet-application/tree/master/mithai-application)
 
 ### CORS Configuration
@@ -370,6 +437,54 @@ Default JWT token expiration is set to 4 hours (14400000 ms). This can be config
 ### Logging
 
 The application uses SLF4J for logging. Logs are output to the console by default.
+
+## My AI Usage
+
+### AI Tools Used
+- ChatGPT
+- Cursor
+- Claude
+
+---
+
+### How I Used AI
+
+#### ChatGPT
+I used ChatGPT primarily as a learning and validation tool:
+- To understand the Test-Driven Development (TDD) workflow and identify appropriate test cases.
+- To debug errors and understand the root causes of issues.
+- To learn new concepts related to Spring Boot, security, and frontend-backend integration.
+- To validate implementation approaches before coding.
+- To understand React project creation and recommended folder structure, as I come from a backend development background.
+- To find optimized and cleaner code snippets.
+- To refactor and improve Git commit messages.
+
+#### Cursor
+I used Cursor as an AI-assisted development tool:
+- To generate unit and integration test cases.
+- To apply consistent changes across multiple files efficiently.
+- To fix issues directly from error logs and warnings.
+- To assist in integrating the React frontend with backend APIs.
+- To generate boilerplate code for API-based frontend components.
+- To identify and resolve common issues such as CORS configuration, API response handling, and authentication errors.
+- To accelerate frontend development by generating initial React components based on my prompts, which I then reviewed, modified, and refined according to project requirements.
+
+---
+
+### Reflection on AI Impact
+
+AI significantly improved my development workflow in the following ways:
+- Enabled faster learning and deeper understanding of concepts.
+- Reduced time spent writing repetitive or boilerplate code.
+- Helped explore multiple implementation ideas and architectural approaches.
+- Assisted in identifying optimized solutions for various scenarios.
+- Made it possible for me to independently build a React frontend application despite not having prior hands-on experience with React.
+
+Although I was new to React, I clearly understood the backend logic, API flows, authentication handling, and error scenarios. Using AI, I was able to translate that understanding into a working frontend by guiding the tool with precise requirements and validating each implementation.
+
+Overall, AI allowed me to focus more on problem-solving, system design, and correctness, while still maintaining full ownership of the final codebase. All AI-generated outputs were carefully reviewed, tested, and customized to meet project needs.
+
+
 
 ## 👤 Author
 
