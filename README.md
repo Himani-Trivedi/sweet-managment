@@ -219,6 +219,55 @@ Once the application is running, access the interactive API documentation:
 #### Categories (`/api/sweets/category`)
 - `GET /api/sweets/category` - Get all categories (Authenticated)
 
+## 📸 Application Screenshots
+
+### Authentication APIs
+
+#### 1. User Registration (`POST /api/auth/register`)
+Register a new user account with validation.
+
+![User Registration with Validation](src/main/resources/static/register_with_valdiation.png)
+
+#### 2. User Login (`POST /api/auth/login`)
+Login page to authenticate users.
+
+![Login Page](src/main/resources/static/login.png)
+
+**Login as Admin:**
+![Login as Admin](src/main/resources/static/login_as_admin.png)
+
+**Login as User:**
+![Login as User](src/main/resources/static/login_as_user.png)
+
+### Sweets Management APIs
+
+#### 3. Create Sweet (`POST /api/sweets`)
+Add a new sweet to the inventory (Admin only).
+
+![Add Sweet](src/main/resources/static/addsweet.png)
+
+#### 4. Search Sweets (`GET /api/sweets/search`)
+Search and filter sweets by name, category, or price range.
+
+![Search Sweets](src/main/resources/static/search.png)
+
+#### 5. Update Sweet (`PUT /api/sweets/{id}`)
+Edit and update sweet details (Admin only).
+
+![Edit Sweet](src/main/resources/static/edit.png)
+
+### Inventory Management APIs
+
+#### 6. Purchase Sweet (`POST /api/sweets/{id}/purchase`)
+Purchase a sweet, decreasing its quantity (Authenticated users).
+
+![Purchase Sweet](src/main/resources/static/pucrchase.png)
+
+#### 7. Restock Sweet (`POST /api/sweets/{id}/restock`)
+Restock a sweet, increasing its quantity (Admin only).
+
+![Restock Sweet](src/main/resources/static/restock.png)
+
 ## 🔐 Authentication & Authorization
 
 ### User Roles
