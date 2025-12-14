@@ -5,6 +5,7 @@ A comprehensive Spring Boot REST API for managing a sweet shop inventory system.
 ## 📋 Table of Contents
 
 1. [Project Overview and Project Setup](#1-project-overview-and-project-setup)
+   - [Frontend Integration](#frontend-integration)
 2. [Application Screenshots](#2-application-screenshots)
 3. [Test Report Screenshot](#3-test-report-screenshot)
 4. [My AI Usage Section](#4-my-ai-usage-section)
@@ -372,7 +373,7 @@ Tests are located in `src/test/java/com/api/mithai/`:
 - **Service Tests**: Unit tests for business logic
 - **Domain Tests**: Entity validation tests
 
-### 🌐 Frontend Integration
+### 🌐 Frontend Integration {#frontend-integration}
 
 **Frontend Repository:**
 - **Frontend Repo**: [sweet-application](https://github.com/Himani-Trivedi/sweet-application)
