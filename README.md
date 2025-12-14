@@ -6,6 +6,8 @@ A comprehensive Spring Boot REST API for managing a sweet shop inventory system.
 
 1. [Project Overview and Project Setup](#1-project-overview-and-project-setup)
    - [Frontend Repo](https://github.com/Himani-Trivedi/sweet-application)
+   - [Live Application](https://rococo-valkyrie-0f7982.netlify.app/)
+   - [Deployment Configuration](#-deployment-configuration)
 2. [Application Screenshots](#2-application-screenshots)
 3. [Test Report Screenshot](#3-test-report-screenshot)
 4. [My AI Usage Section](#4-my-ai-usage-section)
@@ -381,6 +383,31 @@ Tests are located in `src/test/java/com/api/mithai/`:
 #### CORS Configuration
 
 The application is configured to allow requests from `http://localhost:5173` (default Vite port). To change this, update `app.frontend.allowed.origin` in `application.properties`.
+
+### 🚀 Deployment Configuration
+
+#### Live Application
+
+The application is deployed and accessible at:
+- **Frontend Application**: [https://rococo-valkyrie-0f7982.netlify.app/](https://rococo-valkyrie-0f7982.netlify.app/)
+
+#### Docker Image
+
+The backend application is containerized and available as a Docker image:
+- **Docker Image**: `himanitrivedi/sweet-management`
+
+**To run the application using Docker:**
+
+```bash
+docker pull himanitrivedi/sweet-management
+docker run -p 8081:8081 \
+  -e DATASOURCE_URL=jdbc:postgresql://your-db-host:5432/sweet_management \
+  -e DATASOURCE_USERNAME=your_username \
+  -e DATASOURCE_PASSWORD=your_password \
+  himanitrivedi/sweet-management
+```
+
+**Note:** Make sure to provide the required environment variables for database connection when running the Docker container.
 
 ### 📝 Additional Notes
 
