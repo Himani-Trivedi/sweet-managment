@@ -18,7 +18,7 @@ public class Sweet {
     @Column(nullable = false)
     private String name;
 
-    @OneToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private SweetCategory category;
 

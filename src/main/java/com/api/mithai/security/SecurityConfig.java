@@ -1,6 +1,7 @@
 package com.api.mithai.security;
 
 import com.api.mithai.base.service.BaseService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,11 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((req, res, ex) ->
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
+                );
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

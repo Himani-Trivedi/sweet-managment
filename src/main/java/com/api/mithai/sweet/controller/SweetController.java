@@ -38,7 +38,7 @@ public class SweetController {
     }
 
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "List all sweets", description = "Get a paginated list of all available sweets (Public access)")
     public ResponseEntity<BaseResponse> listAll(@RequestParam Map<String, Object> params) {
         PaginatedBaseResponse<SweetResponseDto> paginatedResponse = sweetService.listAll(params);
@@ -46,7 +46,7 @@ public class SweetController {
     }
 
     @GetMapping(Urls.SEARCH_URL)
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Search sweets", description = "Search sweets by name, category, or price range (Public access)")
     public ResponseEntity<BaseResponse> search(@RequestParam Map<String, Object> params) {
         PaginatedBaseResponse<SweetResponseDto> paginatedResponse = sweetService.listAll(params);

@@ -12,4 +12,5 @@ public class Constants {
     public static final String SWEETS_RETRIEVED_SUCCESSFULLY = "Sweets retrieved successfully";
     public static final String SWEET_PURCHASED_SUCCESSFULLY = "Sweet purchased successfully";
     public static final String SWEET_RESTOCKED_SUCCESSFULLY = "Sweet restocked successfully";
+    public static final String SUCCESS ="Success";
 }

@@ -28,7 +28,7 @@ public class InventoryController {
     private final ResponseHandler responseHandler;
 
     @PostMapping("/{id}" + Urls.PURCHASE_URL)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Purchase a sweet", description = "Purchase a sweet, decreasing its quantity (User role required)", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<BaseResponse> purchase(
             @PathVariable Long id,

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(jwt);
             return true;
         } catch (Exception ex) {
-            throw new BadCredentialsException("error.user.authentication", ex);
+            throw new BadCredentialsException("You are not authorized to access this resource");
         }
     }
 
