@@ -14,8 +14,4 @@ public class BaseService {
             "/v3/api-docs",
             "/v3/api-docs/**"
     };
-
-    public String[] allowedOrigins = new String[]{
-            "http://localhost:5173/"
-    };
 }
