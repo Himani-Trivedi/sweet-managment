@@ -2,7 +2,18 @@
 
 A comprehensive Spring Boot REST API for managing a sweet shop inventory system. This application provides authentication, authorization, and full CRUD operations for managing sweets, categories, and inventory.
 
-## 🎯 Overview
+## 📋 Table of Contents
+
+1. [Project Overview and Project Setup](#1-project-overview-and-project-setup)
+2. [Application Screenshots](#2-application-screenshots)
+3. [Test Report Screenshot](#3-test-report-screenshot)
+4. [My AI Usage Section](#4-my-ai-usage-section)
+
+---
+
+## 1. Project Overview and Project Setup
+
+### 🎯 Overview
 
 Sweet Management System is a backend API built with Spring Boot that enables:
 - User registration and authentication using JWT tokens
@@ -13,33 +24,33 @@ Sweet Management System is a backend API built with Spring Boot that enables:
 - Search and filtering capabilities
 - Pagination support
 
-## ✨ Features
+### ✨ Features
 
-### Authentication & Authorization
+#### Authentication & Authorization
 - User registration with email validation
 - JWT-based authentication
 - Role-based access control (ADMIN, USER)
 - Secure password hashing using BCrypt
 
-### Sweet Management
+#### Sweet Management
 - Create, read, update, and delete sweets (Admin only)
 - List all sweets with pagination
 - Search sweets by name, category, or price range
 - View sweet categories
 
-### Inventory Management
+#### Inventory Management
 - Purchase sweets (decreases quantity) - Available to authenticated users
 - Restock sweets (increases quantity) - Admin only
 - Automatic quantity validation
 
-### Additional Features
+#### Additional Features
 - OpenAPI/Swagger documentation
 - Global exception handling
 - Standardized API responses
 - CORS configuration for frontend integration
 - Data initialization (admin user and categories)
 
-## 🛠 Technology Stack
+### 🛠 Technology Stack
 
 - **Java**: 21
 - **Spring Boot**: 3.5.8
@@ -51,9 +62,9 @@ Sweet Management System is a backend API built with Spring Boot that enables:
 - **Gradle**: Build tool
 - **JUnit**: Testing framework
 
-## 📁 Project Structure
+### 📁 Project Structure
 
-### Overview
+#### Overview
 
 The project is organized into modular packages following domain-driven design principles:
 
@@ -65,9 +76,9 @@ src/main/java/com/api/mithai/
 └── security/    # JWT security, filters, and Spring Security configuration
 ```
 
-### Module Breakdown
+#### Module Breakdown
 
-#### 1. **auth/** - Authentication Module
+##### 1. **auth/** - Authentication Module
 Handles user registration, login, and user management:
 - **Controller**: Exposes `/api/auth/register` and `/api/auth/login` endpoints
 - **Service**: Contains authentication business logic, password validation, and JWT token generation
@@ -75,7 +86,7 @@ Handles user registration, login, and user management:
 - **Repository**: User data access operations
 - **DTOs**: Request/Response objects for authentication operations
 
-#### 2. **sweet/** - Sweet Management Module
+##### 2. **sweet/** - Sweet Management Module
 Core business logic for managing sweets and inventory:
 - **Controllers**: 
   - `SweetController`: CRUD operations for sweets
@@ -87,7 +98,7 @@ Core business logic for managing sweets and inventory:
 - **Specification**: JPA Specifications for advanced search and filtering
 - **DTOs**: Data transfer objects for sweet operations
 
-#### 3. **base/** - Common/Base Module
+##### 3. **base/** - Common/Base Module
 Shared components used across the application:
 - **Config**: Application configurations, data initialization, CORS, and OpenAPI setup
 - **Constants**: Application-wide constants and URL definitions
@@ -95,7 +106,7 @@ Shared components used across the application:
 - **Response**: Standardized response wrappers (BaseResponse, PaginatedBaseResponse)
 - **Service**: Base service with common utilities
 
-#### 4. **security/** - Security Module
+##### 4. **security/** - Security Module
 JWT-based authentication and authorization:
 - **JwtTokenProvider**: Token generation and validation
 - **JwtAuthenticationFilter**: Filter to intercept requests and validate JWT tokens
@@ -103,7 +114,7 @@ JWT-based authentication and authorization:
 - **UserDetailsService**: Custom user details service for authentication
 - **AccessTokenManager**: Token management utilities
 
-## 📋 Prerequisites
+### 📋 Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -122,16 +133,16 @@ Before you begin, ensure you have the following installed:
 4. **IDE** (recommended)
    - IntelliJ IDEA, Eclipse, or VS Code with Java extensions
 
-## 🚀 Setup Instructions
+### 🚀 Setup Instructions
 
-### Step 1: Clone the Repository
+#### Step 1: Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd sweet-managment
 ```
 
-### Step 2: Set Up PostgreSQL Database
+#### Step 2: Set Up PostgreSQL Database
 
 1. **Create a PostgreSQL database:**
    ```sql
@@ -143,7 +154,7 @@ cd sweet-managment
    - Username
    - Password
 
-### Step 3: Configure Environment Variables
+#### Step 3: Configure Environment Variables
 
 Create a `.env` file in the root directory (or set environment variables):
 
@@ -155,7 +166,7 @@ DATASOURCE_PASSWORD=your_password
 
 **Note:** The application uses environment variables for database configuration. You can also modify `application.properties` directly, but using environment variables is recommended for security.
 
-### Step 4: Build the Project
+#### Step 4: Build the Project
 
 Using Gradle Wrapper (recommended):
 
@@ -174,7 +185,7 @@ Or using installed Gradle:
 gradle build
 ```
 
-### Step 5: Run the Application
+#### Step 5: Run the Application
 
 **Using Gradle Wrapper:**
 
@@ -197,21 +208,19 @@ gradle bootRun
 - Open the project in your IDE
 - Run `SweetManagementApplication.java`
 
-### Step 6: Verify the Application
+#### Step 6: Verify the Application
 
 1. The application will start on port **8081** (as configured in `application.properties`)
 2. Access Swagger UI at: `http://localhost:8081/swagger-ui.html`
 3. The database tables will be created automatically (Hibernate DDL auto-update)
 
-## ⚙️ Configuration
+### ⚙️ Configuration
 
-### Application Properties
+#### Application Properties
 
 The main configuration file is located at `src/main/resources/application.properties`:
 
-```
-
-### Environment Variables
+#### Environment Variables
 
 Set these environment variables before running:
 
@@ -233,34 +242,164 @@ export DATASOURCE_USERNAME="your_username"
 export DATASOURCE_PASSWORD="your_password"
 ```
 
-## 📚 API Documentation
+### 📚 API Documentation
 
 Once the application is running, access the interactive API documentation:
 
 - **Swagger UI**: `http://localhost:8081/swagger-ui.html`
 - **OpenAPI JSON**: `http://localhost:8081/v3/api-docs`
 
-### API Endpoints Overview
+#### API Endpoints Overview
 
-#### Authentication (`/api/auth`)
+##### Authentication (`/api/auth`)
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login and get JWT token
 
-#### Sweets Management (`/api/sweets`)
+##### Sweets Management (`/api/sweets`)
 - `POST /api/sweets` - Create a new sweet (Admin only)
 - `GET /api/sweets` - List all sweets with pagination (Authenticated)
 - `GET /api/sweets/search` - Search sweets (Authenticated)
 - `PUT /api/sweets/{id}` - Update a sweet (Admin only)
 - `DELETE /api/sweets/{id}` - Delete a sweet (Admin only)
 
-#### Inventory Management (`/api/sweets`)
+##### Inventory Management (`/api/sweets`)
 - `POST /api/sweets/{id}/purchase` - Purchase a sweet (Authenticated)
 - `POST /api/sweets/{id}/restock` - Restock a sweet (Admin only)
 
-#### Categories (`/api/sweets/category`)
+##### Categories (`/api/sweets/category`)
 - `GET /api/sweets/category` - Get all categories (Authenticated)
 
-## 📸 Application Screenshots
+### 🔐 Authentication & Authorization
+
+#### Overview
+
+The application implements a stateless JWT-based authentication system. Authentication flow involves:
+1. User registration with email validation and password hashing
+2. Login to receive a JWT access token
+3. Token validation on protected endpoints
+4. Role-based authorization for different operations
+
+**Security Features:**
+- BCrypt password hashing (10 rounds)
+- JWT tokens with expiration (4 hours default)
+- Stateless authentication (no server-side sessions)
+- Role-based access control (RBAC)
+- CORS configuration for frontend integration
+
+#### User Roles
+
+1. **ADMIN**: Full access to all endpoints
+   - Create, update, delete sweets
+   - Restock inventory
+   - View all data
+
+2. **USER**: Limited access
+   - View sweets and categories
+   - Purchase sweets
+   - Cannot modify inventory
+
+#### Authentication Flow
+
+1. **Register**: Create a new account
+2. **Login**: Get JWT token
+   Response includes `accessToken` in the response body.
+3. **Use Token**: Include in Authorization header
+   ```
+   Authorization: Bearer <your-jwt-token>
+   ```
+
+#### Default Admin User
+
+On first startup, the application automatically creates an admin user:
+- **Email**: `himanitrivedi1874@gmail.com`
+- **Password**: `Admin@123`
+- **Role**: ADMIN
+
+**⚠️ Important**: From register endpoint will be adding new users only not admin user
+
+### 🗄️ Database Schema
+
+#### Overview
+
+The application uses PostgreSQL as the relational database with three main entities:
+- **Users**: Stores user accounts with authentication information
+- **Sweets**: Product catalog with inventory quantities
+- **SweetCategories**: Category classification for sweets
+
+**Database Features:**
+- Automatic schema generation via Hibernate DDL auto-update
+- Unique constraints on email and category names
+- Enum types for user roles
+- Indexed fields for performance
+
+#### Initial Data
+
+On startup, the application initializes:
+- 1 Admin user (if not exists)
+- 10 Sweet categories:
+  - Milk Sweets
+  - Dry Fruits Sweets
+  - Traditional Sweets
+  - Modern Sweets
+  - Sugar-Free Sweets
+  - Festival Special
+  - Bengali Sweets
+  - Gujarati Sweets
+  - Rajasthani Sweets
+  - South Indian Sweets
+
+### 🧪 Testing
+
+#### Test Structure
+
+The project follows Test-Driven Development (TDD) principles with comprehensive test coverage:
+
+**Test Types:**
+- **Controller Tests**: Integration tests verifying API endpoints, request/response handling, and security filters
+- **Service Tests**: Unit tests for business logic, validation, and data transformations
+- **Domain Tests**: Entity validation tests ensuring data integrity and business rules
+
+**Testing Approach:**
+- Tests are organized mirroring the main source structure
+- Uses Spring Boot Test framework for integration testing
+- MockMvc for controller testing
+- JUnit 5 for test execution
+- Spring Security Test for authentication testing
+
+Tests are located in `src/test/java/com/api/mithai/`:
+
+- **Controller Tests**: Integration tests for API endpoints
+- **Service Tests**: Unit tests for business logic
+- **Domain Tests**: Entity validation tests
+
+### 🌐 Frontend Integration
+
+**Frontend Repository:**
+- **Frontend Repo**: [sweet-application](https://github.com/Himani-Trivedi/sweet-application)
+
+#### CORS Configuration
+
+The application is configured to allow requests from `http://localhost:5173` (default Vite port). To change this, update `app.frontend.allowed.origin` in `application.properties`.
+
+### 📝 Additional Notes
+
+#### Password Requirements
+
+Passwords are validated with the following rules:
+- Minimum length requirements
+- Must contain uppercase, lowercase, numbers, and special characters
+
+#### JWT Token Expiration
+
+Default JWT token expiration is set to 4 hours (14400000 ms). This can be configured in `application.properties`.
+
+#### Logging
+
+The application uses SLF4J for logging. Logs are output to the console by default.
+
+---
+
+## 2. Application Screenshots
 
 ### Authentication APIs
 
@@ -309,136 +448,17 @@ Restock a sweet, increasing its quantity (Admin only).
 
 ![Restock Sweet](src/main/resources/static/restock.png)
 
-## 🔐 Authentication & Authorization
+---
 
-### Overview
+## 3. Test Report Screenshot
 
-The application implements a stateless JWT-based authentication system. Authentication flow involves:
-1. User registration with email validation and password hashing
-2. Login to receive a JWT access token
-3. Token validation on protected endpoints
-4. Role-based authorization for different operations
+The following screenshot shows the test execution report for the Sweet Management System, demonstrating comprehensive test coverage across controllers, services, and domain entities.
 
-**Security Features:**
-- BCrypt password hashing (10 rounds)
-- JWT tokens with expiration (4 hours default)
-- Stateless authentication (no server-side sessions)
-- Role-based access control (RBAC)
-- CORS configuration for frontend integration
+![Test Report](src/main/resources/static/report.png)
 
-### User Roles
+---
 
-1. **ADMIN**: Full access to all endpoints
-   - Create, update, delete sweets
-   - Restock inventory
-   - View all data
-
-2. **USER**: Limited access
-   - View sweets and categories
-   - Purchase sweets
-   - Cannot modify inventory
-
-### Authentication Flow
-
-1. **Register**: Create a new account
-2. **Login**: Get JWT token
-   Response includes `accessToken` in the response body.
-3. **Use Token**: Include in Authorization header
-   ```
-   Authorization: Bearer <your-jwt-token>
-   ```
-
-### Default Admin User
-
-On first startup, the application automatically creates an admin user:
-- **Email**: `himanitrivedi1874@gmail.com`
-- **Password**: `Admin@123`
-- **Role**: ADMIN
-
-**⚠️ Important**: From register endpoint will be adding new users only not admin user
-
-## 🗄️ Database Schema
-
-### Overview
-
-The application uses PostgreSQL as the relational database with three main entities:
-- **Users**: Stores user accounts with authentication information
-- **Sweets**: Product catalog with inventory quantities
-- **SweetCategories**: Category classification for sweets
-
-**Database Features:**
-- Automatic schema generation via Hibernate DDL auto-update
-- Unique constraints on email and category names
-- Enum types for user roles
-- Indexed fields for performance
-
-### Initial Data
-
-On startup, the application initializes:
-- 1 Admin user (if not exists)
-- 10 Sweet categories:
-  - Milk Sweets
-  - Dry Fruits Sweets
-  - Traditional Sweets
-  - Modern Sweets
-  - Sugar-Free Sweets
-  - Festival Special
-  - Bengali Sweets
-  - Gujarati Sweets
-  - Rajasthani Sweets
-  - South Indian Sweets
-
-### Test Structure
-
-#### Overview
-
-The project follows Test-Driven Development (TDD) principles with comprehensive test coverage:
-
-**Test Types:**
-- **Controller Tests**: Integration tests verifying API endpoints, request/response handling, and security filters
-- **Service Tests**: Unit tests for business logic, validation, and data transformations
-- **Domain Tests**: Entity validation tests ensuring data integrity and business rules
-
-**Testing Approach:**
-- Tests are organized mirroring the main source structure
-- Uses Spring Boot Test framework for integration testing
-- MockMvc for controller testing
-- JUnit 5 for test execution
-- Spring Security Test for authentication testing
-
-Tests are located in `src/test/java/com/api/mithai/`:
-
-- **Controller Tests**: Integration tests for API endpoints
-- **Service Tests**: Unit tests for business logic
-- **Domain Tests**: Entity validation tests
-
-
-## 🌐 Frontend Integration
-
-**Frontend Repository:**
-- **Frontend Repo**: [sweet-application](https://github.com/Himani-Trivedi/sweet-application/tree/master/mithai-application)
-
-### CORS Configuration
-
-The application is configured to allow requests from `http://localhost:5173` (default Vite port). To change this, update `app.frontend.allowed.origin` in `application.properties`.
-
-## 📝 Additional Notes
-
-### Password Requirements
-
-Passwords are validated with the following rules:
-- Minimum length requirements
-- Must contain uppercase, lowercase, numbers, and special characters
-
-### JWT Token Expiration
-
-Default JWT token expiration is set to 4 hours (14400000 ms). This can be configured in `application.properties`.
-
-### Logging
-
-The application uses SLF4J for logging. Logs are output to the console by default.
-
-## My AI Usage
+## 4. My AI Usage Section
 
 ### AI Tools Used
 - ChatGPT
@@ -484,7 +504,7 @@ Although I was new to React, I clearly understood the backend logic, API flows, 
 
 Overall, AI allowed me to focus more on problem-solving, system design, and correctness, while still maintaining full ownership of the final codebase. All AI-generated outputs were carefully reviewed, tested, and customized to meet project needs.
 
-
+---
 
 ## 👤 Author
 
@@ -492,4 +512,3 @@ Overall, AI allowed me to focus more on problem-solving, system design, and corr
 - Email: himanitrivedi1874@gmail.com
 
 ---
-
